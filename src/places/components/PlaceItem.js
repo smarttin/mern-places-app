@@ -5,8 +5,9 @@ import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
 import { Fragment } from "react";
+import Map from "../../shared/components/UIElements/Map";
 
-const PlaceItem = ({ id, title, image, description, address }) => {
+const PlaceItem = ({ id, title, image, description, address, coordinates }) => {
   const [showMap, setShowMap] = useState(false);
 
   const openMapHandler = () => setShowMap(true);
@@ -24,7 +25,7 @@ const PlaceItem = ({ id, title, image, description, address }) => {
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
       >
         <div className="map-container">
-          <h2>THE MAP..</h2>
+          <Map center={coordinates} zoom={16} />
         </div>
       </Modal>
       <li className="place-item">
