@@ -1,8 +1,7 @@
 const axios = require('axios');
+
 const HttpError = require('../models/http-error');
-
-const API_KEY = "AIzaSyCYgvBfzNPPwVK6gFXX6UrJTIH6_c5PKGM";
-
+const { API_KEY } = require('../config');
 async function geoCodeAddress(address) {
   // no api_key return a dummy latLng
   // return {
@@ -12,7 +11,7 @@ async function geoCodeAddress(address) {
   const response = await axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${API_KEY}`
   );
-
+  
   const data = response.data;
   
   if (!data || data.status === 'ZERO_RESULTS') {
