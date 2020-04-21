@@ -81,7 +81,7 @@ const PlaceItem = ({ id, title, image, description, address, coordinates, creato
         <Card style={{ padding: 0 }}>
           {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
-            <img src={image} alt={title} />
+            <img src={`http://localhost:5000/${image}`} alt={title} />
           </div>
           <div className="place-item__info">
             <h2>{title}</h2>
