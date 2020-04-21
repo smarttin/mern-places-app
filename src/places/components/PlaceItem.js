@@ -7,8 +7,12 @@ import Modal from "../../shared/components/UIElements/Modal";
 import { Fragment } from "react";
 import Map from "../../shared/components/UIElements/Map";
 import { AuthContext } from "../../shared/context/auth-context";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
-const PlaceItem = ({ id, title, image, description, address, coordinates }) => {
+const PlaceItem = ({ id, title, image, description, address, coordinates, creatorId, onDelete }) => {
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const auth = useContext(AuthContext);
@@ -25,13 +29,20 @@ const PlaceItem = ({ id, title, image, description, address, coordinates }) => {
     setShowConfirmModal(false);
   }
 
-  const confirmDeleteHandler = () => {
-    console.log("Deleting...")
+  const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/places/${id}`,
+        'DELETE'
+      );
+      onDelete(id);
+    } catch (err) {}
   }
 
   return (
     <Fragment>
+      <ErrorModal error={error} onClear={clearError} />
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
@@ -52,16 +63,23 @@ const PlaceItem = ({ id, title, image, description, address, coordinates }) => {
         footerClass="place-item__modal-actions"
         footer={
           <>
-            <Button inverse onClick={cancelDeleteWarningHandler}>CANCEL</Button>
-            <Button danger onClick={confirmDeleteHandler}>DELETE</Button>
+            <Button inverse onClick={cancelDeleteWarningHandler}>
+              CANCEL
+            </Button>
+            <Button danger onClick={confirmDeleteHandler}>
+              DELETE
+            </Button>
           </>
         }
       >
-        <p>Do you wish to delete place? please note this action is irreversible</p>
+        <p>
+          Do you wish to delete place? please note this action is irreversible
+        </p>
       </Modal>
 
       <li className="place-item">
         <Card style={{ padding: 0 }}>
+          {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img src={image} alt={title} />
           </div>
@@ -71,9 +89,17 @@ const PlaceItem = ({ id, title, image, description, address, coordinates }) => {
             <p>{description}</p>
           </div>
           <div className="place-item__actions">
-            <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-            {auth.isLoggedIn && <Button to={`/places/${id}`}>EDIT</Button>}
-            {auth.isLoggedIn && <Button danger onClick={deleteWarningHandler}>DELETE</Button>}
+            <Button inverse onClick={openMapHandler}>
+              VIEW ON MAP
+            </Button>
+            {auth.userId === creatorId && (
+              <Button to={`/places/${id}`}>EDIT</Button>
+            )}
+            {auth.userId === creatorId && (
+              <Button danger onClick={deleteWarningHandler}>
+                DELETE
+              </Button>
+            )}
           </div>
         </Card>
       </li>

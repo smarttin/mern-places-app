@@ -12,6 +12,7 @@ import { useForm } from "../../shared/hooks/form-hook";
 import Card from "../../shared/components/UIElements/Card";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { AuthContext } from "../../shared/context/auth-context";
 
 
@@ -100,6 +101,7 @@ const UpdatePlace = () => {
 
   return (
     <Fragment>
+      <ErrorModal error={error} onClear={clearError} />
       {!isLoading && loadedPlace && (
         <form className="place-form" onSubmit={submitHandler}>
         <Input

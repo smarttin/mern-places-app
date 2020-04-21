@@ -17,7 +17,7 @@ const UserItem = ({ id, image, name, placeCount }) => {
           <div className="user-item__info">
             <h2>{name}</h2>
             <h3>
-              {placeCount} {placeCount === 1 ? "Place" : "Places"}
+              {placeCount ? placeCount : null} {placeCount ? placeCount === 1 ? "Place" : "Places" : null}
             </h3>
           </div>
         </Link>
