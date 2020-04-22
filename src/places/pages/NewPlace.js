@@ -2,10 +2,7 @@ import React, { useContext, Fragment } from "react";
 
 import "./PlaceForm.css";
 import Input from "../../shared/components/FormElements/Input";
-import {
-  VALIDATOR_REQUIRE,
-  VALIDATOR_MINLENGTH,
-} from "../../shared/util/validators";
+import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../../shared/util/validators";
 import Button from "../../shared/components/FormElements/Button";
 import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
@@ -51,7 +48,9 @@ const NewPlace = () => {
       formData.append('address', formState.inputs.address.value);
       formData.append('creator', auth.userId);
       formData.append('image', formState.inputs.image.value);
-      await sendRequest('http://localhost:5000/api/places', 'POST',formData);
+      await sendRequest("http://localhost:5000/api/places", "POST", formData, {
+        Authorization: "Bearer " + auth.token,
+      });
       history.push('/');
     } catch (err) {}
   };
